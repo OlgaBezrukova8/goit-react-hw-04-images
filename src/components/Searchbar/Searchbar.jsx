@@ -1,21 +1,22 @@
 import { Component } from 'react';
 
 export class SearchBar extends Component {
-  handleChange = () => {};
-
   render() {
+    const { onSubmit } = this.props;
+    
     return (
-      <header class="searchbar">
-        <form class="form" onChange={this.handleChange}>
-          <button type="submit" class="button">
-            <span class="button-label">Search</span>
+      <header className="searchbar">
+        <form className="form" onSubmit={onSubmit}>
+          <button type="submit" className="button">
+            <span className="button-label">Search</span>
           </button>
 
           <input
-            class="input"
+            className="input"
             type="text"
-            autocomplete="off"
-            autofocus
+            name="name"
+            autoComplete="off"
+            autoFocus
             placeholder="Search images and photos"
           />
         </form>

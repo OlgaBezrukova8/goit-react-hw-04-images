@@ -6,7 +6,7 @@ export const ImageGallery = ({ images }) => (
       <ImageGalleryItem
         key={id}
         webformatURL={webformatURL}
-        //   largeImageURL={largeImageURL}
+        largeImageURL={largeImageURL}
       />
     ))}
   </ul>

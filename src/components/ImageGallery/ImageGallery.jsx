@@ -1,13 +1,10 @@
 import { ImageGalleryItem } from './ImageGalleryItem/ImageGalleryItem';
+import { List } from './ImageGallery.styled';
 
 export const ImageGallery = ({ images }) => (
-  <ul className="gallery">
-    {images.map(({ id, webformatURL, largeImageURL }) => (
-      <ImageGalleryItem
-        key={id}
-        webformatURL={webformatURL}
-        largeImageURL={largeImageURL}
-      />
+  <List>
+    {images.map(({ id, webformatURL }) => (
+      <ImageGalleryItem key={id} webformatURL={webformatURL} />
     ))}
-  </ul>
+  </List>
 );

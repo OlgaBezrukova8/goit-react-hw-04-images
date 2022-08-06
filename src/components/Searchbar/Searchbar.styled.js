@@ -34,8 +34,8 @@ export const Button = css.button`
   width: 48px;
   height: 48px;
   border: 0;
-  background-image: url('https://image.flaticon.com/icons/svg/149/149852.svg');
-  background-size: 40%;
+  background-image: url('https://w7.pngwing.com/pngs/843/729/png-transparent-computer-icons-magnifying-glass-glass-glass-advertising-svg.png');
+  background-size: 80%;
   background-repeat: no-repeat;
   background-position: center;
   opacity: 0.6;

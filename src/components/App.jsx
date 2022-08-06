@@ -6,78 +6,90 @@ import { SearchBar } from './Searchbar/Searchbar';
 import { ImageGallery } from './ImageGallery/ImageGallery';
 import { Modal } from './Modal/Modal';
 import { Button } from './Button/Button';
+import { Loader } from './Loader/Loader';
 
 export class App extends Component {
   state = {
     images: [],
     name: '',
+    image: '',
     page: 1,
     isLoading: false,
-    showModal: false,
     error: null,
   };
 
-  componentDidMount() {
-    window.addEventListener('keydown', event => {
-      if (event.code === 'Escape') {
-        this.toggleModal();
-      }
-    });
-  }
+  componentDidMount() {}
 
-  async componentDidUpdate(prevProps, prevState) {
-    if (this.state.name !== prevState.name) {
-      this.setState({ isLoading: true });
+  componentDidUpdate(prevProps, prevState) {
+    const { name, page } = this.state;
 
-      try {
-        const response = await API.getImageAPI(this.state.name);
-        this.setState({
-          images: response.map(({ id, webformatURL, largeImageURL }) => {
-            return { id, webformatURL, largeImageURL };
-          }),
-        });
-      } catch (error) {
-        console.log(error);
-      }
-
-      this.setState({ isLoading: false });
+    if (name !== prevState.name || page !== prevState.page) {
+      this.fetchImages();
     }
   }
 
-  componentWillUnmount() {}
+  fetchImages = async () => {
+    const { name, page } = this.state;
+    this.setState({ isLoading: true });
+
+    try {
+      const response = await API.getImageAPI(name, page);
+      this.setState(prevState => ({
+        images: [
+          ...prevState.images,
+          ...response.map(({ id, webformatURL, largeImageURL }) => {
+            return { id, webformatURL, largeImageURL };
+          }),
+        ],
+      }));
+    } catch (error) {
+      console.log(error);
+    }
+
+    this.setState({ isLoading: false });
+  };
 
   handleSubmit = event => {
     event.preventDefault();
 
+    const { name } = this.state;
     const currentValue = event.target.name.value;
-    this.setState({ name: currentValue });
+
+    if (currentValue === name) {
+      return;
+    }
+
+    this.setState({ name: currentValue, images: [] });
   };
 
-  toggleModal = () => {
-    this.setState(({ showModal }) => ({ showModal: !showModal }));
+  onCloseModal = () => {
+    this.setState({ image: '' });
+  };
+
+  setCurrentImage = img => {
+    this.setState({ image: img });
+  };
+
+  counterPage = () => {
+    this.setState(prevState => ({ page: prevState.page + 1 }));
   };
 
   render() {
-    const { images, showModal } = this.state;
-    // console.log(this.state.images);
-
+    const { images, image, isLoading } = this.state;
     return (
       <Container>
         <SearchBar onSubmit={this.handleSubmit} />
-        {images.length > 0 ? (
+        {images.length > 0 && (
           <ImageGallery
             images={images}
-            onClick={this.toggleModal}
-            openModal={showModal}
+            setCurrentImage={this.setCurrentImage}
           />
-        ) : null}
-        {showModal && (
-          <Modal onClose={this.toggleModal}  />
-          //   {/* <img src="" alt="" /> */}
-          //   <p>ghbdtn</p>
-          // </Modal>
         )}
-        <Button />
+        {image && <Modal image={image} onCloseModal={this.onCloseModal} />}
+        {!isLoading && images.length > 0 && (
+          <Button title="Load more" showHandler={this.counterPage} />
+        )}
+        {isLoading && <Loader />}
       </Container>
     );
   }

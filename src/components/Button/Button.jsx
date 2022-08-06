@@ -1,7 +1,9 @@
 import { ButtonLoad, Container } from './Button.styled';
 
-export const Button = () => (
+export const Button = ({showHandler}) => (
   <Container>
-    <ButtonLoad>Load more</ButtonLoad>
+    <ButtonLoad onClick={() => showHandler()} type="button">
+      Load more
+    </ButtonLoad>
   </Container>
 );

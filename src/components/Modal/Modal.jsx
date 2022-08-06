@@ -15,14 +15,16 @@ export class Modal extends Component {
 
   handleKeyDown = event => {
     if (event.code === 'Escape') {
-      this.props.onClose();
+      this.props.onCloseModal();
     }
   };
 
   render() {
     return createPortal(
-      <Overlay>
-        <Window>{this.props.children}</Window>
+      <Overlay onClick={this.props.onCloseModal}>
+        <Window>
+          <img src={this.props.image} alt="" />
+        </Window>
       </Overlay>,
       modalRoot
     );

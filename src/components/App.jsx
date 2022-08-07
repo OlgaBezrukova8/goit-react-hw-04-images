@@ -1,5 +1,6 @@
 import { Component } from 'react';
 import * as API from '../services/searchImg-api.js';
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
 import { Container } from './App.styled';
 import { SearchBar } from './Searchbar/Searchbar';
@@ -52,10 +53,15 @@ export class App extends Component {
   handleSubmit = event => {
     event.preventDefault();
 
-    const { name } = this.state;
+    const { name, images } = this.state;
     const currentValue = event.target.name.value;
 
+    if (currentValue === '' && images.length === 0) {
+      Notify.warning('Incorrectly entered query');
+    }
+
     if (currentValue === name) {
+      Notify.info('Enter another query');
       return;
     }
 

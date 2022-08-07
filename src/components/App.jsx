@@ -44,7 +44,7 @@ export class App extends Component {
         ],
       }));
     } catch (error) {
-      console.log(error);
+      this.setState({ error });
     }
 
     this.setState({ isLoading: false });
@@ -57,15 +57,15 @@ export class App extends Component {
     const currentValue = event.target.name.value;
 
     if (currentValue === '' && images.length === 0) {
-      Notify.warning('Incorrectly entered query');
+      Notify.warning('Whoops, incorrectly entered query');
     }
 
     if (currentValue === name) {
-      Notify.info('Enter another query');
+      Notify.info('Enter another query, please :)');
       return;
     }
 
-    this.setState({ name: currentValue, images: [] });
+    this.setState({ name: currentValue, images: [], page: 1 });
   };
 
   onCloseModal = () => {
@@ -81,9 +81,11 @@ export class App extends Component {
   };
 
   render() {
-    const { images, image, isLoading } = this.state;
+    const { images, image, isLoading, error } = this.state;
     return (
       <Container>
+        {error &&
+          Notify.failure(`Whoops, something went wrong: ${error.message}`)}
         <SearchBar onSubmit={this.handleSubmit} />
         {images.length > 0 && (
           <ImageGallery

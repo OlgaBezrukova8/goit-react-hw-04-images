@@ -16,10 +16,9 @@ export class App extends Component {
     image: '',
     page: 1,
     isLoading: false,
+    isEndReached: false,
     error: null,
   };
-
-  componentDidMount() {}
 
   componentDidUpdate(prevProps, prevState) {
     const { name, page } = this.state;
@@ -43,6 +42,9 @@ export class App extends Component {
           }),
         ],
       }));
+      if (response.length < 12) {
+        this.setState({ isEndReached: true });
+      }
     } catch (error) {
       this.setState({ error });
     }
@@ -65,11 +67,22 @@ export class App extends Component {
       return;
     }
 
-    this.setState({ name: currentValue, images: [], page: 1 });
+    this.setState({
+      name: currentValue,
+      images: [],
+      page: 1,
+      isEndReached: false,
+    });
   };
 
-  onCloseModal = () => {
+  onCloseModalEscape = () => {
     this.setState({ image: '' });
+  };
+
+  onCloseModal = event => {
+    if (event.target === event.currentTarget) {
+      this.setState({ image: '' });
+    }
   };
 
   setCurrentImage = img => {
@@ -81,11 +94,13 @@ export class App extends Component {
   };
 
   render() {
-    const { images, image, isLoading, error } = this.state;
+    const { images, image, isLoading, isEndReached, error } = this.state;
     return (
       <Container>
         {error &&
-          Notify.failure(`Whoops, something went wrong: ${error.message}`)}
+          Notify.failure(
+            `Whoops, something went wrong: ${error.message}. Reload page, please`
+          )}
         <SearchBar onSubmit={this.handleSubmit} />
         {images.length > 0 && (
           <ImageGallery
@@ -93,8 +108,14 @@ export class App extends Component {
             setCurrentImage={this.setCurrentImage}
           />
         )}
-        {image && <Modal image={image} onCloseModal={this.onCloseModal} />}
-        {!isLoading && images.length > 0 && (
+        {image && (
+          <Modal
+            image={image}
+            onCloseModalEscape={this.onCloseModalEscape}
+            onCloseModal={this.onCloseModal}
+          />
+        )}
+        {!isLoading && images.length > 0 && !isEndReached && (
           <Button title="Load more" showHandler={this.counterPage} />
         )}
         {isLoading && <Loader />}

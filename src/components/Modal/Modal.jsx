@@ -23,7 +23,7 @@ export class Modal extends Component {
     return createPortal(
       <Overlay onClick={this.props.onCloseModal}>
         <Window>
-          <img src={this.props.image} alt="" />
+          <img src={this.props.image} alt="" width="700" height="400" />
         </Window>
       </Overlay>,
       modalRoot

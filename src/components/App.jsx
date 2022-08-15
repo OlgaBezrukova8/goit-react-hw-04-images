@@ -23,8 +23,6 @@ export const App = () => {
       return;
     }
 
-    setIsLoading(true);
-
     API.getImageAPI(name, page)
       .then(response => {
         setImages(prevState => [
@@ -36,9 +34,12 @@ export const App = () => {
         if (response.length < 12) {
           setIsEndReached(true);
         }
+        setIsLoading(false);
       })
-      .catch(error => setError({ error }))
-      .finally(setIsLoading(false));
+      .catch(error => {
+        setError({ error });
+        setIsLoading(false);
+      });
   }, [name, page]);
 
   useEffect(() => {
@@ -64,6 +65,7 @@ export const App = () => {
       setImages([]);
       setPage(1);
       setIsEndReached(false);
+      setIsLoading(true);
     },
     [images, name]
   );

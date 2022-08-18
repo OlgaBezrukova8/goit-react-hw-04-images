@@ -80,7 +80,10 @@ export const App = () => {
 
   const setCurrentImage = img => setImage(img);
 
-  const counterPage = () => setPage(prevState => prevState + 1);
+  const counterPage = () => {
+    setIsLoading(true);
+    setPage(prevState => prevState + 1);
+  };
 
   return (
     <Container>
